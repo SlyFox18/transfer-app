@@ -33,6 +33,22 @@ function formatDateTime(iso) {
   }
 }
 
+function formatTransitAge(pickupTime) {
+  if (!pickupTime) return ''
+  const ms = Date.now() - new Date(pickupTime).getTime()
+  const totalMinutes = Math.floor(ms / 60000)
+  if (totalMinutes < 60) return `${totalMinutes}m in transit`
+  const hours = Math.floor(totalMinutes / 60)
+  const mins = totalMinutes % 60
+  return mins > 0 ? `${hours}h ${mins}m in transit` : `${hours}h in transit`
+}
+
+function isOverdue(pickupTime, thresholdHours = 4) {
+  if (!pickupTime) return false
+  const ms = Date.now() - new Date(pickupTime).getTime()
+  return ms > thresholdHours * 60 * 60 * 1000
+}
+
 function ShipmentTracking() {
   const [shipments, setShipments] = useState([])
   const [loading, setLoading] = useState(false)
@@ -131,7 +147,14 @@ function ShipmentTracking() {
           {filtered.map((s) => {
             const isPickedUp = s.status === 'picked_up'
             return (
-              <article key={s.id} className="shipment-row">
+              <article
+                key={s.id}
+                className={`shipment-row${
+                  isPickedUp && isOverdue(s.pickupTime)
+                    ? ' shipment-row-overdue'
+                    : ''
+                }`}
+              >
               <div className="shipment-row-header">
                 <div>
                   <div className="shipment-label">Container</div>
@@ -140,6 +163,11 @@ function ShipmentTracking() {
                 <span className={statusClass(s.status)}>
                   {statusLabel(s.status)}
                 </span>
+                {isPickedUp && isOverdue(s.pickupTime) && (
+                  <span className="status-pill status-pill-overdue">
+                    Overdue
+                  </span>
+                )}
               </div>
 
               <div className="two-column">
@@ -162,7 +190,9 @@ function ShipmentTracking() {
                   {s.driverName ? `Driver: ${s.driverName}` : 'Unassigned'}
                 </span>
                 <span>
-                  {s.dropoffTime
+                  {isPickedUp
+                    ? formatTransitAge(s.pickupTime)
+                    : s.dropoffTime
                     ? `Done ${formatDateTime(s.dropoffTime)}`
                     : s.pickupTime
                     ? `Picked ${formatDateTime(s.pickupTime)}`

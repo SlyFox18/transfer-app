@@ -72,19 +72,12 @@ function mapStatus(field4) {
 export async function getShipments(accessToken) {
   const { siteId, listId } = await getSiteAndListIds(accessToken)
 
-  const activeData = await graphRequest(
-    `/sites/${siteId}/lists/${listId}/items?$expand=fields&$filter=fields/field_4 ne 2&$orderby=createdDateTime desc&$top=200`,
+  const data = await graphRequest(
+    `/sites/${siteId}/lists/${listId}/items?$expand=fields&$orderby=createdDateTime desc&$top=500`,
     accessToken,
   )
 
-  const deliveredData = await graphRequest(
-    `/sites/${siteId}/lists/${listId}/items?$expand=fields&$filter=fields/field_4 eq 2&$orderby=createdDateTime desc&$top=20`,
-    accessToken,
-  )
-
-  const activeItems = activeData.value || []
-  const deliveredItems = deliveredData.value || []
-  const items = [...activeItems, ...deliveredItems]
+  const items = data.value || []
 
   return items.map((item) => {
     const fields = item.fields || {}

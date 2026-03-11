@@ -21,9 +21,13 @@ function AppShell({ children, onSignOut }) {
   return (
     <div className="app-shell">
       <header className="app-header">
-        <div>
-          <h1 className="app-title">Transfer App</h1>
-          <p className="app-subtitle">Internal Delivery Driver</p>
+        <div className="app-header-brand">
+          <img
+            src="/SPI%20Logo%20white%20with%20green.png"
+            alt="South Plains Implement"
+            className="app-logo"
+          />
+          <p className="app-subtitle">Transfer App</p>
         </div>
         <button
           type="button"
@@ -131,8 +135,12 @@ function App() {
     return (
       <div className="app-shell">
         <header className="app-header">
-          <div>
-            <h1 className="app-title">South Plains Implement</h1>
+          <div className="app-header-brand">
+            <img
+              src="/SPI%20Logo%20white%20with%20green.png"
+              alt="South Plains Implement"
+              className="app-logo"
+            />
             <p className="app-subtitle">Transfer App</p>
           </div>
         </header>
@@ -160,8 +168,12 @@ function App() {
     return (
       <div className="app-shell">
         <header className="app-header">
-          <div>
-            <h1 className="app-title">South Plains Implement</h1>
+          <div className="app-header-brand">
+            <img
+              src="/SPI%20Logo%20white%20with%20green.png"
+              alt="South Plains Implement"
+              className="app-logo"
+            />
             <p className="app-subtitle">Transfer App</p>
           </div>
         </header>
@@ -181,8 +193,12 @@ function App() {
     return (
       <div className="app-shell">
         <header className="app-header">
-          <div>
-            <h1 className="app-title">South Plains Implement</h1>
+          <div className="app-header-brand">
+            <img
+              src="/SPI%20Logo%20white%20with%20green.png"
+              alt="South Plains Implement"
+              className="app-logo"
+            />
             <p className="app-subtitle">Transfer App</p>
           </div>
         </header>

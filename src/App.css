@@ -30,6 +30,19 @@
   text-transform: uppercase;
 }
 
+.app-header-brand {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.app-logo {
+  height: 36px;
+  width: auto;
+  object-fit: contain;
+  object-position: left center;
+}
+
 .tab-nav {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));

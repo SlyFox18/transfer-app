@@ -15,7 +15,7 @@ import { loginRequest } from './authConfig'
 
 export const AuthContext = createContext(null)
 
-function AppShell({ children, onSignOut }) {
+function AppShell({ children, onSignOut, isOffline }) {
   const location = useLocation()
 
   return (
@@ -30,6 +30,12 @@ function AppShell({ children, onSignOut }) {
           <p className="app-subtitle">Transfer App</p>
         </div>
       </header>
+
+      {isOffline && (
+        <div className="offline-banner">
+          No internet connection — changes won't save until you're back online.
+        </div>
+      )}
 
       <nav className="tab-nav">
         <NavLink
@@ -79,6 +85,18 @@ function App() {
   const isAuthenticated = useIsAuthenticated()
   const [accessToken, setAccessToken] = useState(null)
   const [tokenError, setTokenError] = useState(null)
+  const [isOffline, setIsOffline] = useState(!navigator.onLine)
+
+  useEffect(() => {
+    const goOffline = () => setIsOffline(true)
+    const goOnline = () => setIsOffline(false)
+    window.addEventListener('offline', goOffline)
+    window.addEventListener('online', goOnline)
+    return () => {
+      window.removeEventListener('offline', goOffline)
+      window.removeEventListener('online', goOnline)
+    }
+  }, [])
 
   useEffect(() => {
     let cancelled = false
@@ -225,7 +243,7 @@ function App() {
 
   return (
     <AuthContext.Provider value={authContextValue}>
-      <AppShell onSignOut={handleSignOut}>
+      <AppShell onSignOut={handleSignOut} isOffline={isOffline}>
         <Routes>
           <Route path="/" element={<Navigate to="/shipments" replace />} />
           <Route path="/shipments" element={<ShipmentTracking />} />

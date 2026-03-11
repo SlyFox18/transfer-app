@@ -26,6 +26,7 @@ function BarcodeScanner({ onScan }) {
     scanner.render(
       (decodedText) => {
         onScan?.(decodedText)
+        navigator.vibrate?.(60)
         setActive(false)
       },
       () => {

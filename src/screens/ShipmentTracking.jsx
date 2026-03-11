@@ -38,8 +38,10 @@ function ShipmentTracking() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [activeOnly, setActiveOnly] = useState(true)
+  const [mineOnly, setMineOnly] = useState(false)
   const { accessToken } = useContext(AuthContext) || {}
   const navigate = useNavigate()
+  const myName = localStorage.getItem('transfer_app_driver') || ''
 
   const loadShipments = async () => {
     if (!accessToken) return
@@ -60,9 +62,9 @@ function ShipmentTracking() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [accessToken])
 
-  const filtered = activeOnly
-    ? shipments.filter((s) => s.status !== 'delivered')
-    : shipments
+  const filtered = shipments
+    .filter((s) => !activeOnly || s.status !== 'delivered')
+    .filter((s) => !mineOnly || !myName || s.driverName === myName)
 
   return (
     <section className="screen-card">
@@ -82,6 +84,16 @@ function ShipmentTracking() {
           >
             {activeOnly ? 'Show All' : 'Active Only'}
           </button>
+          {myName && (
+            <button
+              type="button"
+              className="secondary-button-ghost"
+              style={{ padding: '0.2rem 0.6rem', fontSize: 12 }}
+              onClick={() => setMineOnly((v) => !v)}
+            >
+              {mineOnly ? 'All Drivers' : 'Mine Only'}
+            </button>
+          )}
           <button
             type="button"
             className="secondary-button-ghost"
@@ -118,18 +130,8 @@ function ShipmentTracking() {
         <div className="shipments-list">
           {filtered.map((s) => {
             const isPickedUp = s.status === 'picked_up'
-            const articleProps = isPickedUp
-              ? {
-                  onClick: () =>
-                    navigate('/dropoff', {
-                      state: { containerId: s.containerId },
-                    }),
-                  style: { cursor: 'pointer' },
-                }
-              : {}
-
             return (
-              <article key={s.id} className="shipment-row" {...articleProps}>
+              <article key={s.id} className="shipment-row">
               <div className="shipment-row-header">
                 <div>
                   <div className="shipment-label">Container</div>
@@ -168,9 +170,17 @@ function ShipmentTracking() {
                 </span>
               </div>
               {isPickedUp && (
-                <div className="shipment-tap-hint">
-                  Tap to complete dropoff →
-                </div>
+                <button
+                  type="button"
+                  className="complete-dropoff-button"
+                  onClick={() =>
+                    navigate('/dropoff', {
+                      state: { containerId: s.containerId },
+                    })
+                  }
+                >
+                  Complete Dropoff
+                </button>
               )}
             </article>
             )

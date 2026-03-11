@@ -1,11 +1,14 @@
 import { useContext, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import BarcodeScanner from '../components/BarcodeScanner.jsx'
 import { recordDropoff } from '../sharepoint'
 import { AuthContext } from '../App.jsx'
 
 function ShipmentDropoff() {
-  const [containerId, setContainerId] = useState('')
+  const location = useLocation()
+  const [containerId, setContainerId] = useState(
+    () => location.state?.containerId || '',
+  )
   const [dropoffLocation, setDropoffLocation] = useState('')
   const [message, setMessage] = useState('')
   const [saving, setSaving] = useState(false)
@@ -56,6 +59,12 @@ function ShipmentDropoff() {
             value={containerId}
             onChange={(e) => setContainerId(e.target.value)}
           />
+          {location.state?.containerId && (
+            <p className="helper-text">
+              Container pre-filled from tracking — scan or enter the dropoff
+              location.
+            </p>
+          )}
         </div>
 
         <BarcodeScanner

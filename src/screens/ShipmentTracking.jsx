@@ -1,4 +1,5 @@
 import { useContext, useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { getShipments } from '../sharepoint'
 import { AuthContext } from '../App.jsx'
 
@@ -38,6 +39,7 @@ function ShipmentTracking() {
   const [error, setError] = useState(null)
   const [activeOnly, setActiveOnly] = useState(true)
   const { accessToken } = useContext(AuthContext) || {}
+  const navigate = useNavigate()
 
   const loadShipments = async () => {
     if (!accessToken) return
@@ -114,8 +116,20 @@ function ShipmentTracking() {
         </p>
       ) : (
         <div className="shipments-list">
-          {filtered.map((s) => (
-            <article key={s.id} className="shipment-row">
+          {filtered.map((s) => {
+            const isPickedUp = s.status === 'picked_up'
+            const articleProps = isPickedUp
+              ? {
+                  onClick: () =>
+                    navigate('/dropoff', {
+                      state: { containerId: s.containerId },
+                    }),
+                  style: { cursor: 'pointer' },
+                }
+              : {}
+
+            return (
+              <article key={s.id} className="shipment-row" {...articleProps}>
               <div className="shipment-row-header">
                 <div>
                   <div className="shipment-label">Container</div>
@@ -153,8 +167,14 @@ function ShipmentTracking() {
                     : ''}
                 </span>
               </div>
+              {isPickedUp && (
+                <div className="shipment-tap-hint">
+                  Tap to complete dropoff →
+                </div>
+              )}
             </article>
-          ))}
+            )
+          })}
         </div>
       )}
     </section>

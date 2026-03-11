@@ -6,7 +6,9 @@ import { AuthContext } from '../App.jsx'
 function ShipmentPickup() {
   const [containerId, setContainerId] = useState('')
   const [pickupLocation, setPickupLocation] = useState('')
-  const [driverName, setDriverName] = useState('')
+  const [driverName, setDriverName] = useState(
+    () => localStorage.getItem('transfer_app_driver') || '',
+  )
   const [message, setMessage] = useState('')
   const [saving, setSaving] = useState(false)
   const { accessToken } = useContext(AuthContext) || {}
@@ -28,6 +30,7 @@ function ShipmentPickup() {
     try {
       await recordPickup(accessToken, { containerId, pickupLocation, driverName })
       setMessage('Pickup recorded.')
+      localStorage.setItem('transfer_app_driver', driverName)
       setContainerId('')
       setPickupLocation('')
     } catch {

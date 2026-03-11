@@ -14,11 +14,19 @@ function statusClass(status) {
   return 'status-pill status-pill-open'
 }
 
-function formatTime(iso) {
+function formatDateTime(iso) {
   if (!iso) return ''
   try {
     const d = new Date(iso)
-    return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    const now = new Date()
+    const isToday =
+      d.getFullYear() === now.getFullYear() &&
+      d.getMonth() === now.getMonth() &&
+      d.getDate() === now.getDate()
+    const time = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    if (isToday) return `Today ${time}`
+    const date = d.toLocaleDateString([], { month: 'short', day: 'numeric' })
+    return `${date} ${time}`
   } catch {
     return ''
   }
@@ -28,6 +36,7 @@ function ShipmentTracking() {
   const [shipments, setShipments] = useState([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
+  const [activeOnly, setActiveOnly] = useState(true)
   const { accessToken } = useContext(AuthContext) || {}
 
   const loadShipments = async () => {
@@ -49,15 +58,38 @@ function ShipmentTracking() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [accessToken])
 
+  const filtered = activeOnly
+    ? shipments.filter((s) => s.status !== 'delivered')
+    : shipments
+
   return (
     <section className="screen-card">
       <div className="screen-heading">
-        <h2 className="screen-title">Active Shipments</h2>
-        {!loading && !error && (
-          <span className="screen-meta">
-            {shipments.length ? `${shipments.length} total` : 'No records yet'}
-          </span>
-        )}
+        <h2 className="screen-title">Shipments</h2>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          {!loading && !error && (
+            <span className="screen-meta">
+              {filtered.length} {activeOnly ? 'active' : 'total'}
+            </span>
+          )}
+          <button
+            type="button"
+            className="secondary-button-ghost"
+            style={{ padding: '0.2rem 0.6rem', fontSize: 12 }}
+            onClick={() => setActiveOnly((v) => !v)}
+          >
+            {activeOnly ? 'Show All' : 'Active Only'}
+          </button>
+          <button
+            type="button"
+            className="secondary-button-ghost"
+            style={{ padding: '0.2rem 0.6rem', fontSize: 12 }}
+            onClick={loadShipments}
+            disabled={loading}
+          >
+            {loading ? '…' : 'Refresh'}
+          </button>
+        </div>
       </div>
 
       {loading ? (
@@ -74,13 +106,15 @@ function ShipmentTracking() {
             Retry
           </button>
         </div>
-      ) : shipments.length === 0 ? (
+      ) : filtered.length === 0 ? (
         <p className="empty-state">
-          New pickups and dropoffs will appear here as you scan them.
+          {activeOnly
+            ? 'No active shipments. Tap "Show All" to see delivered ones.'
+            : 'No shipments recorded yet.'}
         </p>
       ) : (
         <div className="shipments-list">
-          {shipments.map((s) => (
+          {filtered.map((s) => (
             <article key={s.id} className="shipment-row">
               <div className="shipment-row-header">
                 <div>
@@ -113,9 +147,9 @@ function ShipmentTracking() {
                 </span>
                 <span>
                   {s.dropoffTime
-                    ? `Done ${formatTime(s.dropoffTime)}`
+                    ? `Done ${formatDateTime(s.dropoffTime)}`
                     : s.pickupTime
-                    ? `Picked ${formatTime(s.pickupTime)}`
+                    ? `Picked ${formatDateTime(s.pickupTime)}`
                     : ''}
                 </span>
               </div>

@@ -1,4 +1,5 @@
 import { useContext, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import BarcodeScanner from '../components/BarcodeScanner.jsx'
 import { recordDropoff } from '../sharepoint'
 import { AuthContext } from '../App.jsx'
@@ -9,6 +10,7 @@ function ShipmentDropoff() {
   const [message, setMessage] = useState('')
   const [saving, setSaving] = useState(false)
   const { accessToken } = useContext(AuthContext) || {}
+  const navigate = useNavigate()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -26,9 +28,10 @@ function ShipmentDropoff() {
     setMessage('')
     try {
       await recordDropoff(accessToken, { containerId, dropoffLocation })
-      setMessage('Dropoff recorded.')
       setContainerId('')
       setDropoffLocation('')
+      setMessage('Dropoff recorded. Going to Tracking...')
+      setTimeout(() => navigate('/shipments'), 1500)
     } catch {
       setMessage('Could not record dropoff. Please try again.')
     } finally {

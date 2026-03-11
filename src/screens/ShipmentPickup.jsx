@@ -1,4 +1,5 @@
 import { useContext, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import BarcodeScanner from '../components/BarcodeScanner.jsx'
 import { recordPickup } from '../sharepoint'
 import { AuthContext } from '../App.jsx'
@@ -12,6 +13,7 @@ function ShipmentPickup() {
   const [message, setMessage] = useState('')
   const [saving, setSaving] = useState(false)
   const { accessToken } = useContext(AuthContext) || {}
+  const navigate = useNavigate()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -29,10 +31,11 @@ function ShipmentPickup() {
     setMessage('')
     try {
       await recordPickup(accessToken, { containerId, pickupLocation, driverName })
-      setMessage('Pickup recorded.')
       localStorage.setItem('transfer_app_driver', driverName)
       setContainerId('')
       setPickupLocation('')
+      setMessage('Pickup recorded. Going to Tracking...')
+      setTimeout(() => navigate('/shipments'), 1500)
     } catch {
       setMessage('Could not record pickup. Please try again.')
     } finally {

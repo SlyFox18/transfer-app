@@ -95,7 +95,7 @@ function ShipmentTracking() {
           <button
             type="button"
             className="secondary-button-ghost"
-            style={{ padding: '0.2rem 0.6rem', fontSize: 12 }}
+            style={{ padding: '0.45rem 0.85rem', fontSize: 13 }}
             onClick={() => setActiveOnly((v) => !v)}
           >
             {activeOnly ? 'Show All' : 'Active Only'}
@@ -104,7 +104,7 @@ function ShipmentTracking() {
             <button
               type="button"
               className="secondary-button-ghost"
-              style={{ padding: '0.2rem 0.6rem', fontSize: 12 }}
+              style={{ padding: '0.45rem 0.85rem', fontSize: 13 }}
               onClick={() => setMineOnly((v) => !v)}
             >
               {mineOnly ? 'All Drivers' : 'Mine Only'}
@@ -113,7 +113,7 @@ function ShipmentTracking() {
           <button
             type="button"
             className="secondary-button-ghost"
-            style={{ padding: '0.2rem 0.6rem', fontSize: 12 }}
+            style={{ padding: '0.45rem 0.85rem', fontSize: 13 }}
             onClick={loadShipments}
             disabled={loading}
           >

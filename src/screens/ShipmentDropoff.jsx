@@ -52,13 +52,36 @@ function ShipmentDropoff() {
       <form onSubmit={handleSubmit} className="form-grid">
         <div>
           <div className="field-label">Container ID</div>
-          <input
-            className="text-input"
-            type="text"
-            placeholder="Scan or type container"
-            value={containerId}
-            onChange={(e) => setContainerId(e.target.value)}
-          />
+          <div style={{ position: 'relative' }}>
+            <input
+              className="text-input"
+              type="text"
+              placeholder="Scan or type container"
+              value={containerId}
+              onChange={(e) => setContainerId(e.target.value)}
+              style={containerId ? { paddingRight: '2.5rem' } : {}}
+            />
+            {containerId && (
+              <button
+                type="button"
+                onClick={() => setContainerId('')}
+                style={{
+                  position: 'absolute',
+                  right: '0.6rem',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  background: 'none',
+                  border: 'none',
+                  color: '#9ca3af',
+                  fontSize: '1.1rem',
+                  lineHeight: 1,
+                  padding: '0.2rem',
+                }}
+              >
+                ×
+              </button>
+            )}
+          </div>
           {location.state?.containerId && (
             <p className="helper-text">
               Container pre-filled from tracking — scan or enter the dropoff
@@ -77,17 +100,45 @@ function ShipmentDropoff() {
               setMessage('Dropoff location scanned.')
             }
           }}
+          scanHint={
+            !containerId
+              ? 'Next scan \u2192 Container ID'
+              : 'Next scan \u2192 Dropoff Location'
+          }
         />
 
         <div>
           <div className="field-label">Dropoff Location</div>
-          <input
-            className="text-input"
-            type="text"
-            placeholder="Scan or type dropoff location"
-            value={dropoffLocation}
-            onChange={(e) => setDropoffLocation(e.target.value)}
-          />
+          <div style={{ position: 'relative' }}>
+            <input
+              className="text-input"
+              type="text"
+              placeholder="Scan or type dropoff location"
+              value={dropoffLocation}
+              onChange={(e) => setDropoffLocation(e.target.value)}
+              style={dropoffLocation ? { paddingRight: '2.5rem' } : {}}
+            />
+            {dropoffLocation && (
+              <button
+                type="button"
+                onClick={() => setDropoffLocation('')}
+                style={{
+                  position: 'absolute',
+                  right: '0.6rem',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  background: 'none',
+                  border: 'none',
+                  color: '#9ca3af',
+                  fontSize: '1.1rem',
+                  lineHeight: 1,
+                  padding: '0.2rem',
+                }}
+              >
+                ×
+              </button>
+            )}
+          </div>
         </div>
 
         <button type="submit" className="primary-button" disabled={saving}>

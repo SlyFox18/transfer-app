@@ -39,14 +39,6 @@ function AppShell({ children, onSignOut, isOffline }) {
 
       <nav className="tab-nav">
         <NavLink
-          to="/shipments"
-          className={({ isActive }) =>
-            `tab-link ${isActive ? 'tab-link-active' : ''}`
-          }
-        >
-          Tracking
-        </NavLink>
-        <NavLink
           to="/pickup"
           className={({ isActive }) =>
             `tab-link ${isActive ? 'tab-link-active' : ''}`
@@ -61,6 +53,14 @@ function AppShell({ children, onSignOut, isOffline }) {
           }
         >
           Dropoff
+        </NavLink>
+        <NavLink
+          to="/shipments"
+          className={({ isActive }) =>
+            `tab-link ${isActive ? 'tab-link-active' : ''}`
+          }
+        >
+          Tracking
         </NavLink>
       </nav>
 
@@ -245,11 +245,11 @@ function App() {
     <AuthContext.Provider value={authContextValue}>
       <AppShell onSignOut={handleSignOut} isOffline={isOffline}>
         <Routes>
-          <Route path="/" element={<Navigate to="/shipments" replace />} />
+          <Route path="/" element={<Navigate to="/pickup" replace />} />
           <Route path="/shipments" element={<ShipmentTracking />} />
           <Route path="/pickup" element={<ShipmentPickup />} />
           <Route path="/dropoff" element={<ShipmentDropoff />} />
-          <Route path="*" element={<Navigate to="/shipments" replace />} />
+          <Route path="*" element={<Navigate to="/pickup" replace />} />
         </Routes>
       </AppShell>
     </AuthContext.Provider>

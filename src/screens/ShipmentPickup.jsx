@@ -34,8 +34,7 @@ function ShipmentPickup() {
       localStorage.setItem('transfer_app_driver', driverName)
       setContainerId('')
       setPickupLocation('')
-      setMessage('Pickup recorded. Going to Tracking...')
-      setTimeout(() => navigate('/shipments'), 1500)
+      setMessage('success')
     } catch {
       setMessage('Could not record pickup. Please try again.')
     } finally {
@@ -60,17 +59,45 @@ function ShipmentPickup() {
             value={driverName}
             onChange={(e) => setDriverName(e.target.value)}
           />
+          {!driverName && (
+            <p className="helper-text" style={{ marginTop: '0.25rem' }}>
+              Enter your name once — it will be saved for next time.
+            </p>
+          )}
         </div>
 
         <div>
           <div className="field-label">Container ID</div>
-          <input
-            className="text-input"
-            type="text"
-            placeholder="Scan or type container"
-            value={containerId}
-            onChange={(e) => setContainerId(e.target.value)}
-          />
+          <div style={{ position: 'relative' }}>
+            <input
+              className="text-input"
+              type="text"
+              placeholder="Scan or type container"
+              value={containerId}
+              onChange={(e) => setContainerId(e.target.value)}
+              style={containerId ? { paddingRight: '2.5rem' } : {}}
+            />
+            {containerId && (
+              <button
+                type="button"
+                onClick={() => setContainerId('')}
+                style={{
+                  position: 'absolute',
+                  right: '0.6rem',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  background: 'none',
+                  border: 'none',
+                  color: '#9ca3af',
+                  fontSize: '1.1rem',
+                  lineHeight: 1,
+                  padding: '0.2rem',
+                }}
+              >
+                ×
+              </button>
+            )}
+          </div>
         </div>
 
         <BarcodeScanner
@@ -83,24 +110,57 @@ function ShipmentPickup() {
               setMessage('Pickup location scanned.')
             }
           }}
+          scanHint={
+            !containerId
+              ? 'Next scan \u2192 Container ID'
+              : 'Next scan \u2192 Pickup Location'
+          }
         />
 
         <div>
           <div className="field-label">Pickup Location</div>
-          <input
-            className="text-input"
-            type="text"
-            placeholder="Scan or type pickup location"
-            value={pickupLocation}
-            onChange={(e) => setPickupLocation(e.target.value)}
-          />
+          <div style={{ position: 'relative' }}>
+            <input
+              className="text-input"
+              type="text"
+              placeholder="Scan or type pickup location"
+              value={pickupLocation}
+              onChange={(e) => setPickupLocation(e.target.value)}
+              style={pickupLocation ? { paddingRight: '2.5rem' } : {}}
+            />
+            {pickupLocation && (
+              <button
+                type="button"
+                onClick={() => setPickupLocation('')}
+                style={{
+                  position: 'absolute',
+                  right: '0.6rem',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  background: 'none',
+                  border: 'none',
+                  color: '#9ca3af',
+                  fontSize: '1.1rem',
+                  lineHeight: 1,
+                  padding: '0.2rem',
+                }}
+              >
+                ×
+              </button>
+            )}
+          </div>
         </div>
 
         <button type="submit" className="primary-button" disabled={saving}>
           {saving ? 'Saving...' : 'Record Pickup'}
         </button>
 
-        {message && <p className="helper-text">{message}</p>}
+        {message === 'success' && (
+          <div className="success-banner">✓ Pickup recorded!</div>
+        )}
+        {message && message !== 'success' && (
+          <p className="helper-text">{message}</p>
+        )}
       </form>
     </section>
   )

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Html5QrcodeScanner } from 'html5-qrcode'
 
-function BarcodeScanner({ onScan }) {
+function BarcodeScanner({ onScan, scanHint }) {
   const [active, setActive] = useState(false)
   const scannerRef = useRef(null)
   const containerId = 'transfer-app-scanner'
@@ -60,8 +60,7 @@ function BarcodeScanner({ onScan }) {
 
       {!active && (
         <p className="helper-text">
-          Tap <span className="inline-code">Scan Barcode</span> to activate the
-          camera. Point at the container or location code.
+          {scanHint || 'Tap Scan Barcode to activate the camera.'}
         </p>
       )}
     </div>

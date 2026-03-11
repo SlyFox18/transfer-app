@@ -29,14 +29,6 @@ function AppShell({ children, onSignOut }) {
           />
           <p className="app-subtitle">Transfer App</p>
         </div>
-        <button
-          type="button"
-          className="secondary-button"
-          style={{ marginLeft: 'auto', padding: '0.3rem 0.6rem', fontSize: 12 }}
-          onClick={onSignOut}
-        >
-          Sign out
-        </button>
       </header>
 
       <nav className="tab-nav">
@@ -69,6 +61,15 @@ function AppShell({ children, onSignOut }) {
       <main className="app-main" key={location.pathname}>
         {children}
       </main>
+      <footer className="app-footer">
+        <button
+          type="button"
+          className="sign-out-button"
+          onClick={onSignOut}
+        >
+          Sign out
+        </button>
+      </footer>
     </div>
   )
 }

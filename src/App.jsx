@@ -23,7 +23,7 @@ function AppShell({ children, onSignOut }) {
       <header className="app-header">
         <div className="app-header-brand">
           <img
-            src="/SPI%20Logo%20white%20with%20green.png"
+            src="/spi-logo.png"
             alt="South Plains Implement"
             className="app-logo"
           />
@@ -137,7 +137,7 @@ function App() {
         <header className="app-header">
           <div className="app-header-brand">
             <img
-              src="/SPI%20Logo%20white%20with%20green.png"
+              src="/spi-logo.png"
               alt="South Plains Implement"
               className="app-logo"
             />
@@ -170,7 +170,7 @@ function App() {
         <header className="app-header">
           <div className="app-header-brand">
             <img
-              src="/SPI%20Logo%20white%20with%20green.png"
+              src="/spi-logo.png"
               alt="South Plains Implement"
               className="app-logo"
             />
@@ -195,7 +195,7 @@ function App() {
         <header className="app-header">
           <div className="app-header-brand">
             <img
-              src="/SPI%20Logo%20white%20with%20green.png"
+              src="/spi-logo.png"
               alt="South Plains Implement"
               className="app-logo"
             />
